@@ -1,0 +1,27 @@
+# Daily BigQuery -> KV sync, so you no longer need to double-click run.cmd.
+# Add these repository secrets (Settings -> Secrets and variables -> Actions):
+#   GCP_KEY_JSON (paste the whole gcp-key.json), KV_ACCOUNT_ID, KV_NAMESPACE_ID, KV_API_TOKEN,
+#   PUBLIC_URL, OWNER_TOKEN
+name: Stock Clock sync
+on:
+  schedule:
+    - cron: "15 6 * * *"   # 06:15 UTC = 07:15 Lagos
+  workflow_dispatch: {}
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --omit=dev --no-audit --no-fund
+      - run: node pipeline_engine.js
+        env:
+          PROJECT_ID: beaming-might-319312
+          GCP_KEY_JSON: ${{ secrets.GCP_KEY_JSON }}
+          KV_ACCOUNT_ID: ${{ secrets.KV_ACCOUNT_ID }}
+          KV_NAMESPACE_ID: ${{ secrets.KV_NAMESPACE_ID }}
+          KV_API_TOKEN: ${{ secrets.KV_API_TOKEN }}
+          PUBLIC_URL: ${{ secrets.PUBLIC_URL }}
+          OWNER_TOKEN: ${{ secrets.OWNER_TOKEN }}

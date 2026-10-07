@@ -1,0 +1,8 @@
+# secrets — never commit
+.env
+.dev.vars
+gcp-key.json
+*.json.key
+# build / local state
+node_modules/
+.wrangler/

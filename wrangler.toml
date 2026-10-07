@@ -1,0 +1,34 @@
+name = "stock-clock"
+main = "worker.js"
+compatibility_date = "2025-09-01"
+
+# Dashboard files (index.html, engine.js, app.js, seed.json)
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+# Daily BigQuery snapshot written by pipeline_engine.js
+[[kv_namespaces]]
+binding = "STOCK_KV"
+id = "4795a624c92c41cc87738a6bab97e72d"
+
+# People, routing, alerts, POs, cost ledger
+# 1) npx wrangler d1 create stock-clock   2) paste the database_id below
+[[d1_databases]]
+binding = "DB"
+database_name = "stock-clock"
+database_id = "bb5f3ecd-ae46-42d0-ab30-dcc54019a81a"
+
+# Rules run every 30 minutes: open / close / escalate alerts, send digests
+[triggers]
+crons = ["*/30 * * * *"]
+
+[vars]
+# Your live URL, used for links inside Slack and email. Update after first deploy.
+PUBLIC_URL = "https://stock-clock.dashboard-report.workers.dev/"
+
+# Secrets (never put these in this file):
+#   npx wrangler secret put OWNER_TOKEN        any long random string; unlocks owner mode
+#   npx wrangler secret put SLACK_WEBHOOK_URL  https://hooks.slack.com/services/...
+#   npx wrangler secret put RESEND_API_KEY     re_...
+#   npx wrangler secret put ALERT_EMAIL_TO     the email you signed up to Resend with

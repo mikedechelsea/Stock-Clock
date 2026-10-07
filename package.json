@@ -1,0 +1,20 @@
+{
+  "name": "stock-clock",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "node pipeline_engine.js",
+    "dev": "wrangler dev",
+    "db:init": "wrangler d1 execute stock-clock --remote --file=schema.sql",
+    "db:init:local": "wrangler d1 execute stock-clock --local --file=schema.sql",
+    "deploy": "wrangler deploy",
+    "seed": "node scripts/make_seed.mjs"
+  },
+  "dependencies": {
+    "@google-cloud/bigquery": "^7.9.1",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "wrangler": "^4.148.0"
+  }
+}
